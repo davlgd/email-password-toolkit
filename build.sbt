@@ -10,6 +10,7 @@ lazy val root = project
 
     libraryDependencies ++= Seq(
       "org.scalameta" %% "munit" % "1.2.1" % Test,
+      "org.typelevel" %% "munit-cats-effect" % "2.0.0" % Test,
       "org.http4s" %% "http4s-ember-server" % "0.23.33",
       "org.http4s" %% "http4s-dsl" % "0.23.33",
       "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.12.2",
