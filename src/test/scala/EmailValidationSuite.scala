@@ -5,11 +5,14 @@ import org.http4s.implicits.*
 import org.http4s.circe.*
 import org.typelevel.ci.CIString
 import io.circe.Json
+import io.circe.syntax.*
+import io.circe.generic.auto.*
 
 class EmailValidationSuite extends CatsEffectSuite {
   test("POST /valid/email without bearer token returns 401") {
+    val json = Json.obj("email" -> Json.fromString("user@example.com"))
     val request = Request[IO](Method.POST, uri"/valid/email")
-      .withEntity("user@example.com")
+      .withEntity(json)
     val response = Main.httpApp.run(request)
 
     response.map { resp =>
@@ -18,8 +21,9 @@ class EmailValidationSuite extends CatsEffectSuite {
   }
 
   test("POST /valid/email with invalid bearer token returns 401") {
+    val json = Json.obj("email" -> Json.fromString("user@example.com"))
     val request = Request[IO](Method.POST, uri"/valid/email")
-      .withEntity("user@example.com")
+      .withEntity(json)
       .putHeaders(Header.Raw(CIString("Authorization"), "Bearer invalid-token"))
     val response = Main.httpApp.run(request)
 
@@ -29,8 +33,9 @@ class EmailValidationSuite extends CatsEffectSuite {
   }
 
   test("POST /valid/email with valid email returns valid: true") {
+    val json = Json.obj("email" -> Json.fromString("user@example.com"))
     val request = Request[IO](Method.POST, uri"/valid/email")
-      .withEntity("user@example.com")
+      .withEntity(json)
       .putHeaders(Header.Raw(CIString("Authorization"), "Bearer valid-token"))
     val response = Main.httpApp.run(request)
 
@@ -43,8 +48,9 @@ class EmailValidationSuite extends CatsEffectSuite {
   }
 
   test("POST /valid/email with invalid email returns valid: false") {
+    val json = Json.obj("email" -> Json.fromString("invalid-email"))
     val request = Request[IO](Method.POST, uri"/valid/email")
-      .withEntity("invalid-email")
+      .withEntity(json)
       .putHeaders(Header.Raw(CIString("Authorization"), "Bearer valid-token"))
     val response = Main.httpApp.run(request)
 
@@ -57,8 +63,9 @@ class EmailValidationSuite extends CatsEffectSuite {
   }
 
   test("POST /valid/email with email missing @ returns valid: false") {
+    val json = Json.obj("email" -> Json.fromString("userexample.com"))
     val request = Request[IO](Method.POST, uri"/valid/email")
-      .withEntity("userexample.com")
+      .withEntity(json)
       .putHeaders(Header.Raw(CIString("Authorization"), "Bearer valid-token"))
     val response = Main.httpApp.run(request)
 
