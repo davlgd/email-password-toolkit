@@ -2,6 +2,9 @@ import cats.effect.IO
 import munit.CatsEffectSuite
 import org.http4s.*
 import org.http4s.implicits.*
+import org.http4s.circe.*
+import org.typelevel.ci.CIString
+import io.circe.Json
 
 class PasswordStrengthSuite extends CatsEffectSuite {
   test("POST /valid/password without bearer token returns 401") {
@@ -21,10 +24,10 @@ class PasswordStrengthSuite extends CatsEffectSuite {
     val response = Main.httpApp.run(request)
 
     response.flatMap { resp =>
-      resp.as[String].map { body =>
+      resp.asJson.map { json =>
         assertEquals(resp.status, Status.Ok)
-        assert(body.contains("\"entropy\":"))
-        assert(body.contains("\"strength\":\"strong\""))
+        assert(json.hcursor.get[Double]("entropy").isRight)
+        assertEquals(json.hcursor.get[String]("strength"), Right("strong"))
       }
     }
   }
@@ -36,10 +39,10 @@ class PasswordStrengthSuite extends CatsEffectSuite {
     val response = Main.httpApp.run(request)
 
     response.flatMap { resp =>
-      resp.as[String].map { body =>
+      resp.asJson.map { json =>
         assertEquals(resp.status, Status.Ok)
-        assert(body.contains("\"entropy\":"))
-        assert(body.contains("\"strength\":\"weak\""))
+        assert(json.hcursor.get[Double]("entropy").isRight)
+        assertEquals(json.hcursor.get[String]("strength"), Right("weak"))
       }
     }
   }
@@ -51,10 +54,10 @@ class PasswordStrengthSuite extends CatsEffectSuite {
     val response = Main.httpApp.run(request)
 
     response.flatMap { resp =>
-      resp.as[String].map { body =>
+      resp.asJson.map { json =>
         assertEquals(resp.status, Status.Ok)
-        assert(body.contains("\"entropy\":"))
-        assert(body.contains("\"strength\":\"medium\""))
+        assert(json.hcursor.get[Double]("entropy").isRight)
+        assertEquals(json.hcursor.get[String]("strength"), Right("medium"))
       }
     }
   }
@@ -66,10 +69,10 @@ class PasswordStrengthSuite extends CatsEffectSuite {
     val response = Main.httpApp.run(request)
 
     response.flatMap { resp =>
-      resp.as[String].map { body =>
+      resp.asJson.map { json =>
         assertEquals(resp.status, Status.Ok)
-        assert(body.contains("\"entropy\":"))
-        assert(body.contains("\"strength\":\"strong\""))
+        assert(json.hcursor.get[Double]("entropy").isRight)
+        assertEquals(json.hcursor.get[String]("strength"), Right("strong"))
       }
     }
   }

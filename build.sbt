@@ -13,8 +13,12 @@ lazy val root = project
       "org.typelevel" %% "munit-cats-effect" % "2.0.0" % Test,
       "org.http4s" %% "http4s-ember-server" % "0.23.33",
       "org.http4s" %% "http4s-dsl" % "0.23.33",
+      "org.http4s" %% "http4s-circe" % "0.23.33",
+      "io.circe" %% "circe-core" % "0.14.10",
+      "io.circe" %% "circe-parser" % "0.14.10",
       "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.12.2",
       "com.softwaremill.sttp.tapir" %% "tapir-http4s-server" % "1.12.2",
-      "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % "1.12.2"
+      "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % "1.12.2",
+      "com.softwaremill.sttp.tapir" %% "tapir-json-circe" % "1.12.2"
     )
   )

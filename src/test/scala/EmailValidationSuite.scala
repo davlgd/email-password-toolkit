@@ -2,6 +2,9 @@ import cats.effect.IO
 import munit.CatsEffectSuite
 import org.http4s.*
 import org.http4s.implicits.*
+import org.http4s.circe.*
+import org.typelevel.ci.CIString
+import io.circe.Json
 
 class EmailValidationSuite extends CatsEffectSuite {
   test("POST /valid/email without bearer token returns 401") {
@@ -32,9 +35,9 @@ class EmailValidationSuite extends CatsEffectSuite {
     val response = Main.httpApp.run(request)
 
     response.flatMap { resp =>
-      resp.as[String].map { body =>
+      resp.asJson.map { json =>
         assertEquals(resp.status, Status.Ok)
-        assert(body.contains("\"valid\":true"))
+        assertEquals(json.hcursor.get[Boolean]("valid"), Right(true))
       }
     }
   }
@@ -46,9 +49,9 @@ class EmailValidationSuite extends CatsEffectSuite {
     val response = Main.httpApp.run(request)
 
     response.flatMap { resp =>
-      resp.as[String].map { body =>
+      resp.asJson.map { json =>
         assertEquals(resp.status, Status.Ok)
-        assert(body.contains("\"valid\":false"))
+        assertEquals(json.hcursor.get[Boolean]("valid"), Right(false))
       }
     }
   }
@@ -60,9 +63,9 @@ class EmailValidationSuite extends CatsEffectSuite {
     val response = Main.httpApp.run(request)
 
     response.flatMap { resp =>
-      resp.as[String].map { body =>
+      resp.asJson.map { json =>
         assertEquals(resp.status, Status.Ok)
-        assert(body.contains("\"valid\":false"))
+        assertEquals(json.hcursor.get[Boolean]("valid"), Right(false))
       }
     }
   }
