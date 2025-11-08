@@ -23,11 +23,13 @@ object Main extends IOApp:
 
   // Démarrage du serveur
   def run(args: List[String]): IO[ExitCode] =
+    val serverPort = sys.props.get("http.port").flatMap(_.toIntOption).getOrElse(8080)
+
     EmberServerBuilder
       .default[IO]
       .withHost(ipv4"0.0.0.0")
-      .withPort(port"8080")
+      .withPort(Port.fromInt(serverPort).get)
       .withHttpApp(httpApp)
       .build
-      .use(_ => IO.println("Serveur démarré sur http://localhost:8080/api") *> IO.never)
+      .use(_ => IO.println(s"Serveur démarré sur http://localhost:$serverPort/api") *> IO.never)
       .as(ExitCode.Success)
