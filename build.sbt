@@ -19,6 +19,7 @@ lazy val root = project
       "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.12.2",
       "com.softwaremill.sttp.tapir" %% "tapir-http4s-server" % "1.12.2",
       "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % "1.12.2",
-      "com.softwaremill.sttp.tapir" %% "tapir-json-circe" % "1.12.2"
+      "com.softwaremill.sttp.tapir" %% "tapir-json-circe" % "1.12.2",
+      "org.passay" % "passay" % "1.6.6"
     )
   )
