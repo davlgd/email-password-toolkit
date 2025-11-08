@@ -5,17 +5,27 @@ import org.http4s.server.Router
 import com.comcast.ip4s.*
 import sttp.tapir.*
 import sttp.tapir.server.http4s.Http4sServerInterpreter
+import sttp.tapir.swagger.bundle.SwaggerInterpreter
+import sttp.tapir.swagger.SwaggerUIOptions
 
 object Main extends IOApp:
 
-  val helloEndpoint = endpoint
+  val helloEndpoint: PublicEndpoint[Unit, Unit, String, Any] = endpoint
     .get
     .in("api")
     .out(stringBody)
+
+  val helloServerEndpoint = helloEndpoint
     .serverLogicSuccess[IO](_ => IO.pure("Hello, World!"))
 
+  val apiEndpoints = List(helloEndpoint)
+
+  val swaggerEndpoints = SwaggerInterpreter(
+    swaggerUIOptions = SwaggerUIOptions.default.copy(pathPrefix = List("docs"), yamlName = "openapi.yaml")
+  ).fromEndpoints[IO](apiEndpoints, "TDD API", "0.1.0")
+
   val routes = Http4sServerInterpreter[IO]()
-    .toRoutes(helloEndpoint)
+    .toRoutes(helloServerEndpoint :: swaggerEndpoints)
 
   val httpApp = Router("/" -> routes).orNotFound
 

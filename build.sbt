@@ -13,6 +13,7 @@ lazy val root = project
       "org.http4s" %% "http4s-ember-server" % "0.23.33",
       "org.http4s" %% "http4s-dsl" % "0.23.33",
       "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.12.2",
-      "com.softwaremill.sttp.tapir" %% "tapir-http4s-server" % "1.12.2"
+      "com.softwaremill.sttp.tapir" %% "tapir-http4s-server" % "1.12.2",
+      "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % "1.12.2"
     )
   )
