@@ -8,20 +8,17 @@ import sttp.tapir.server.http4s.Http4sServerInterpreter
 
 object Main extends IOApp:
 
-  // Définition de l'endpoint Tapir pour /api
   val helloEndpoint = endpoint
     .get
     .in("api")
     .out(stringBody)
     .serverLogicSuccess[IO](_ => IO.pure("Hello, World!"))
 
-  // Conversion de l'endpoint Tapir en routes http4s
   val routes = Http4sServerInterpreter[IO]()
     .toRoutes(helloEndpoint)
 
   val httpApp = Router("/" -> routes).orNotFound
 
-  // Démarrage du serveur
   def run(args: List[String]): IO[ExitCode] =
     val serverPort = sys.props.get("http.port").flatMap(_.toIntOption).getOrElse(8080)
 
@@ -31,5 +28,5 @@ object Main extends IOApp:
       .withPort(Port.fromInt(serverPort).get)
       .withHttpApp(httpApp)
       .build
-      .use(_ => IO.println(s"Serveur démarré sur http://localhost:$serverPort/api") *> IO.never)
+      .use(_ => IO.println(s"Server started on http://localhost:$serverPort/api") *> IO.never)
       .as(ExitCode.Success)
