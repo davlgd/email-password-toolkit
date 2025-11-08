@@ -1,5 +1,8 @@
 val scala3Version = "3.7.4"
 
+enablePlugins(JavaAppPackaging)
+Compile / packageDoc / mappings := Seq()
+
 lazy val root = project
   .in(file("."))
   .settings(
